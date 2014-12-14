@@ -8,6 +8,6 @@ This repository's code is divided into two sections:
 Folder Name  | Language | Number of Files
 ------------- | ------------- | -------------
 DataPreparation  | Python | 1
-DataAnalysis  | R | x
+DataAnalysis  | R | 1
 
 Note that the actual data must be downloaded from Yelp directly and then placed in the appropriate directories before these scripts can be run. 
