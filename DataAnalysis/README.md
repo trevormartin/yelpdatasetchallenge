@@ -2,5 +2,4 @@ This directory contains the following files:
 
 File Name  | Description
 ------------- | -------------
-example.r  | Does example
-example.r  | Does example
+yelpanalysis.r  | Reads in the output of parse_data.py; performs statistical analysis and plot creation
