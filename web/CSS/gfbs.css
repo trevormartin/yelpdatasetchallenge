@@ -1,0 +1,186 @@
+a {text-decoration: none;
+display: block;
+color: grey;
+}
+
+a:visited {
+text-decoration: none;
+display: block;
+color: grey;
+}
+
+a:hover {
+color: red;
+margin-top: 1px;
+
+}
+
+#content1 {
+        position: relative;
+        margin: 100px auto;
+	width: 800px;	
+	height: 300px;
+}
+
+#gfbsLogo {
+	position: relative;	
+	height: 500px;
+	top: -100px;	
+	left: -100px;
+}
+
+#content2 {
+	position: relative;
+	margin: 100px auto;
+	width: 800px;
+	height: 100px;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 25px;
+	font-weight: 300;
+	color: grey;
+}
+
+#gfbs_text_left {
+	position: absolute;
+	top: 50px;
+	left: 40px;
+}
+
+#header_line {
+	position: absolute;
+	width: 150px;
+	height: 1px;
+	top: 55px;
+	left: 280px;
+	background: grey;
+}
+
+#gfbs_text_right {
+	position: absolute;
+	top: 50px;
+	left: 510px;
+}
+
+#content3{
+	position: relative;
+	margin: 100px auto;
+	width: 800px;
+	height: 800px;
+}
+
+#intro_header{
+	position: absolute;
+	font-family: "Crimson Text", "Times New Roman", serif;
+	font-weight: 700;
+	font-size: 35px;
+	color: black;
+}
+
+#intro_text{
+	position: relative;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 300;
+	font-size: 25px;
+	top: 80px;
+	line-height: 35px;
+	width: 750px;
+}
+
+#content4{
+	position: relative;
+	margin: 100px auto;
+	width: 800px;
+	height: 1200px;
+}
+
+#q1_header{
+	position: absolute;
+	font-family: "Crimson Text", "Times New Roman", serif;
+	font-weight: 700;
+	font-size: 35px;
+	color: black;
+}
+
+
+#aaContent1{
+	position: relative;
+	margin: 100px auto;
+	width: 800px;
+	height: 0px;
+}
+
+#aaGfbsLogo {
+	position: relative;	
+	height: 100px;
+	top: -100px;	
+}
+
+#aaContent2{
+	position: relative;
+	margin: 100px auto;
+	width: 800px;
+	height: 500px;
+}
+
+#aaHeader{
+	position: absolute;
+	font-family: "Source Sans Pro" , sans-serif;
+	font-weight: 200;
+	font-size: 50px;
+	color: grey;
+	left: 225px;
+	top: -50px;
+}
+
+#aaContent3{
+	position: relative;
+	margin: 100px auto;
+	width: 800px;
+	height: 300px;
+}
+
+#aaLeftImage{
+	position: absolute;	
+	height: 300px;
+	left: 120px;
+	top: 100px;
+	
+}
+
+#aaRightImage{
+	position: absolute;
+	height: 300px;
+	left: 480px;
+	top: 100px;
+}
+
+#aaLeftCaption{
+	position: absolute;
+	top: 420px;
+	font-size: 25px;
+	left: 150px;
+	font-family: "Source Sans Pro", sans-serif;
+	color: grey;
+	
+}
+
+#aaRightCaption{
+	position: absolute;
+	top: 420px;
+	font-size: 25px;
+	left: 535px;
+	font-family: "Source Sans Pro" , sans-serif;
+	color: grey;
+}
+
+#buyTag{
+	position: absolute;
+	top: 200px;	
+	font-size: 30px;
+	font-weight: 200;
+	font-family: "Source Sans Pro" , sans-serif;
+	color: #d3d3d3;
+	left: 200px;
+
+
+}
