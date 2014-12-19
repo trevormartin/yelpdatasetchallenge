@@ -11,3 +11,5 @@ DataPreparation  | Python | 1
 DataAnalysis  | R | 1
 
 Note that the actual data must be downloaded from Yelp directly and then placed in the appropriate directories before these scripts can be run. 
+
+The website created for this project can be found at: http://www.goodfoodbadservice.com. Website code available in the /web/ folder. 
