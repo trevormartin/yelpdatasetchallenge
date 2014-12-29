@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head profile="http://www.w3.org/2005/10/profile">
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Crimson+Text:400,600,700' rel='stylesheet' type='text/css'>
+<link rel="icon" href="http://www.goodfoodbadservice.com//favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://www.goodfoodbadservice.com//favicon.ico" type="image/x-icon">
+<title>goodFoodBadService.com</title>
+<link href="CSS/gfbs.css" rel="stylesheet" title="main.css" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>   
+<script>
+// Get the headers position from the top of the page, plus its own height
+var startY = 500;
+
+$(window).scroll(function(){
+    checkY();
+});
+
+function checkY(){
+    if( $(window).scrollTop() > startY ){
+        $('.fixedDiv').slideDown();
+    }else{
+        $('.fixedDiv').slideUp();
+    }
+}
+
+// Do this on load just in case the user starts half way down the page
+checkY();
+</script>
+</head>
+
+<body>
+<div class="linkMenu">
+<div class="fixedDiv">
+<a id="testLink" href="https://trevor.shinyapps.io/InteractiveApp/">Data Viz</a>
+<a id="testLink2" href="http://www.goodfoodbadservice.com/gfbsMethods.html" target="_parent">Methods</a>    
+<a id="testLink3" href="http://www.goodfoodbadservice.com/gfbsAuthors.html" target="_parent">Authors</a>
+<a id="testLink4" href="http://www.yelp.com/dataset_challenge" target="_parent">Yelp Challenge</a>
+</div>
+</div> 
+
+<div id="content1">
+	<img id ="gfbsLogo" src = "gfbsLogo.png"></img>
+</div>
+
+<div id="content2">
+	<div id="gfbs_text_left"><a href="https://trevor.shinyapps.io/InteractiveApp/" >data visualization</a></div>
+	<div id="spacer_left">  </div> 
+	<div id="gfbs_text_ml"><a href="http://www.goodfoodbadservice.com/gfbsMethods.html" target="_parent">methods</a></div>
+	<div id="spacer_middle"> </div>
+	<div id="gfbs_text_mr"><a href="http://www.goodfoodbadservice.com/gfbsAuthors.html" target="_parent">about the authors</a></div>
+	<div id="spacer_right"> </div>
+	<div id="gfbs_text_right"><a href="http://www.yelp.com/dataset_challenge" target="_parent">yelp challenge</a></div>
+</div>
+
+<div id="content3">
+	<div id="intro_header">Would you go to a GFBS?</div>
+	<div id="intro_text">We have all been to a GFBS restaurant: Good Food, Bad Service. &nbsp; A restaurant serving dishes from <span style = "color: green">food heaven</span>, but also staffed with <span style= "color: red">incompetent, inattentive, or overwhelmed servers</span>.<br><br>
+	GFBSs are everywhere. &nbsp; Some people want a little love during their dining experience and probably avoid these restaurants. &nbsp; But other people, especially the "foodies" among us, flock to the GFBS like pigeons picking at croissants on the street.  &nbsp; Whatever your preference, you probably want to know which restaurants are GFBSs so that you can either find a hidden gem or stay away from a bad experience.<br><br>
+	<span style="font-weight: 600"><em>So can we figure out if a restaurant is a GFBS?</em></span><br><br>
+	Yelp - as awesome as it is - only has one metric for rating a restaurant. &nbsp; The rating of 1 to 5 stars reflects both the quality of the service <em>AND</em> the food (along with whatever else comes to a reviewer's mind). &nbsp; So if a restaurant has a rating of 1 star - we <em>can't tell</em> whether the low score reflects appalling service <em> or</em> disgusting food.<br><br>
+	But fear not, as we have discovered a simple way to remedy this problem. &nbsp; Yelp reviewers couple their star rating with a description of their experience. &nbsp; Using this text data combined with the star rating - we have created a way to find these GFBSs. &nbsp; So for you foodies out there - don't be fooled by the 3 star rating - the food at these restaurants may in fact be delicious!</div>
+</div>
+
+
+<div id="content4">
+<div id="q1_header">Analysis 1: &nbsp; How many GFBSs are out there?</div>
+<div id="contentText">
+<br>
+By searching for particular <em>service words</em> in a review, like &ldquo;impolite&rdquo; or &ldquo;helpful&rdquo;, we inferred whether a review was based on service.  &nbsp; We then compared the rating of the reviews that talked about service, and the rating for the reviews that did not.  &nbsp; A restaurant with a lower rating in their service reviews may be a GFBS.  &nbsp; Now there's a lot more details, and the full methods and all code are available <a href="http://www.goodfoodbadservice.com/gfbsMethods.html" class="boxLink">here</a>, but one particular issue is worth talking about before we go on.  <br><br>
+
+If a review is a long, rambling oratory, it will have a higher chance of containing a <em>service word</em> compared to a short, succinct review. &nbsp;  This  relationship will become a problem in our analysis if there is also a relationship  between the length of the review and the rating (confounding!).  &nbsp;   
+And - there indeed is a relationship! &nbsp; Plus it's strong - a correlation of -0.12  (pvalue <1e-15). &nbsp;  To avoid this pattern from biasing any of our downstream results, we carefully removed this effect before doing any of our analyses (details in methods).
+<br><br>
+After correcting for these issues - we can now answer the original question - how many GFBS's are out there? &nbsp; This is what we saw when we compared the reviews with the service words and the reviews without for each restaurant individually: </div>
+<div id="figure1Title">Businesses with Significant Differences in Ratings for Service Based Reviews and Non-Service Based Reviews</div>
+<img src="figures/Analysis1.1.png" id="figure1"></img>
+<div id="figure1caption">For each restaurant, the average rating for <em> non-service </em> reviews is plotted against the <em>service-related</em> reviews. Red points are the restaurants with significant differences between the two sets of reviews.  The red points above the grey dotted line are GFBSs, those that are below the line are BFGSs.</div>
+<div id="contentText2">  Overall at a false-discovery-rate of 5%, we saw: </div>
+	<div id="gfbsList"><a href="gfbsSigList.html" target="_parent" id="gfbsListLink">35 GFBS Restaurants</a></div>
+<div id="contentText3"> click to see the list </div>
+<div id="contentText4">
+<br><br>
+<div id="marginBox">
+You can click the link above to see the list of GFBS restaurants and their actual reviews. You can also <a href="https://trevor.shinyapps.io/InteractiveApp/" class="boxLink" >click here</a> to go to our interactive map that visualizes the data that went into our analysis.
+</div>
+A few points about these results. &nbsp; First, we're setting a rather stringent threshold for identifying a business as a GFBS, so there are likely more out there. &nbsp; A false discovery rate of 5% means that we expect 1 in 20 of the businesses we identified (so ~2 in this case) to be false positives, e.g., businesses that are not truly GFBS restaurants. &nbsp; Setting this threshold also will increases the false negative rate.  &nbsp; Second, using this method, we can also find out which restaurants are the opposite (BFGSs).  &nbsp;  We see that there are far more GFBSs than BFGSs (35 GFBSs vs 5 BFGSs). &nbsp;  This is no coincidence!  &nbsp; We'll explore this more in Analysis 3. &nbsp; Lastly, we also asked whether a certain category of restaurants tended to be a GFBS or BFGS. &nbsp; By testing whether any specific category was over-represented in our lists compared to what we expect from random chance, two categories of restaurants were found to be significantly likely to be GFBS restaurants: Burgers and Pizza.
+<br><br>
+Now, if you read the reviews with low ratings for GFBS restaurants you'll quickly see that <a style="font-weight: 700; display: inline;" href="http://www.yelp.com/biz/bachi-burger-las-vegas?sort_by=rating_asc">service was a big issue (click here)</a>.  &nbsp; Also, notice that "Essence Bakery Cafe" is found twice in the list. &nbsp; That's not a typo.  &nbsp;  Two independent locations for this brand are GFBS restaurants! &nbsp; If we expand our list to a FDR of 10%, we see that our top GFBS - "Bachi Burger" - also has another branch that performs poorly in their service-based reviews.
+<br><br>
+In summary, for those of you who live in one of the cities that Yelp provided the data for (Phoenix, Las Vegas, Madison, Waterloo, Edinburgh), this list will help you find those restaurants where the food may actually be better than the rating indicates. &nbsp;  And if you happen to be the restaurant owner or manager of a restaurant on this list - you probably want to take a second look at how you're serving your patrons (but pat yourself on the back for the food)!
+</div>
+<div id="q2_header">Analysis 2: &nbsp; Service cranks</div>
+<div id = "contentText5">
+We've identified restaurants that have strong differences between the ratings of their service-based reviews and the other reviews. &nbsp; We can also ask the same question about individuals - do certain individuals care more about service? &nbsp; Although there is not a significant overall difference between service-based review scores and other review scores when looking across all individuals together (p-value of 0.26), there are 12 reviewers who individually showed significant differences (at a false discovery rate of 5%). &nbsp; Interestingly, the majority of these individuals gave higher ratings if they mentioned service, <em> the opposite trend than we saw with businesses. </em>  &nbsp; It seems that there is a small subset of individuals who particularly notice great service and reward it!
+<br><br>
+Looking more broadly, we then asked the question - what percent of the time do individual reviewers mention service in general? &nbsp; As it turns out, on average a reviewer mentions service in just over half of their reviews (mean of 54.5%). &nbsp; That's a lot!
+</div>
+<div id="figure21Title">Frequency of Service Based Reviews Across Individuals</div>
+<img src="figures/Analysis2.2.png" id="figure21"></img>
+<div id="figure21caption"> Histogram of the percent of reviews containing service words for each individual. The solid red line indicates the mean percent of reviews containing service words. 
+</div>
+<div id="contentText6">
+There is a lot of variance though in how often reviewers mention service, with some individuals mentioning it less than a quarter of the time and others mentioning it in almost every review. &nbsp;  We hypothesized that reviewers who seldom mention service would likely have had very impactful (either good or bad) service experiences that caused them to write about service the few times they mentioned it. To test this idea, we looked for a relationship between the difference in the average ratings of service-based reviews and the non-service reviews with the percent of reviews mentioning service for each individual.
+</div>  
+<div id="figure22Title">Frequency of Service Based Reviews Across Individuals Correlates Negatively With Difference in Ratings Between Review Types</div>
+<img src="figures/Analysis2.3.png" id="figure22"></img>
+<div id="figure22caption"> Scatterplot of the mean for reviews without service words minus the mean for reviews with service words versus percent of reviews with service words for each individual. Solid red line is the regression of the mean review difference on the percent of reviews with service words. Grey shaded area indicates 95% confidence interval.  
+</div>
+<div id="contentText7">
+As shown in the plot - there is a highly significant correlation of -0.10 (p-value of 1.15e-8).
+ &nbsp; The correlation is negative, meaning that individuals who seldom write about service will tend to rate restaurants with a <em> lower score </em> when giving a service-based review compared to those who consistently write about service. This makes sense. The individuals who rarely comment about service likely only use a service-related word when they had a particularly bad experience, whereas individuals who often rate on service are potentially more likely to only rate on food when it was particularly bad. 
+</div>
+
+<div id="q3_header">Analysis 3: &nbsp; Service hurts, and what else?</div>
+<div id="contentText8"> <br>As discussed above, we found more GFBSs than BFGSs. &nbsp; This could imply that reviews that mention service may generally have lower ratings than the reviews that don't mention service.  &nbsp; We tested this directly by looking across all reviews and businesses jointly.  &nbsp; Comparing the scores between service-based reviews and non-service based reviews across all businesses, we found that service-based reviews tended to have a significantly lower rating (p-value = 1.5 e-11).  &nbsp; This makes sense because people, at least from our personal experience, enjoy griping about service and raving about food. &nbsp;  But what about all other types of words?  Are certain words used more frequently when people are writing a good review? &nbsp; We explored this question by testing how the presence or absence of a word in a review can correlate with the score. &nbsp;  After looking at every single possible word, there were 1184 words that significantly correlated with the rating (at an FDR of 5%). &nbsp; The top sets of words were rather interesting:
+</div>
+<div id="figure31Title">Top 10 words (positively and negatively) correlating with <em>review stars</em> </div>
+<img src="figures/Analysis3.1.png" id="figure31"></img>
+<div id="figure31caption"> Rank of word versus review stars for the top ten words whose normalized frequency is most positively and negatively correlated with review stars. 
+</div>
+<div id="contentText9">
+ &nbsp; For example, &ldquo;duck&rdquo;, &ldquo;cod&rdquo;, &ldquo;poached&rdquo;, &ldquo;crepes&rdquo;, all describe foods that tend to be found in restaurants with higher scores. &nbsp; Is this an indication that these foods may be the key to getting a higher review, or is this all correlation and no causation? &nbsp;  We can't tell from this data alone but it's certainly a tempting morself of info to think about! &nbsp;  Looking at the set of words that were more frequently used in lower score reviews, we saw words like &ldquo;airport&rdquo;, &ldquo;occupied&rdquo;, &ldquo;issues&rdquo;, &ldquo;serving&rdquo;. &nbsp; Note that we see many service-related words (rediscovered in an assumption free manner!), and also&ldquo;7pm&rdquo; seemed to be a bad time to mention in a review. &nbsp; We suspect that 7pm tends to be a busy time of the day for restaurants so perhaps people are not receiving the attention or service that they need at the time. &nbsp; Also, not included in the figure but still with a significantly negative correlation, was the word &ldquo;groupon&rdquo;.  &nbsp; Sounds like giving away groupons may be doing a disservice to a restaurant's rating!
+<br><br>
+We can also do a similar analysis by associating the use of words with the dollar score.  &nbsp; Are certain words used more frequently in more expensive restaurants?  &nbsp; Which words are common in reviews of cheaper restaurants?
+</div>
+<div id="figure32Title">Top 10 words (positively and negatively) correlating with <em>dollar score</em> </div>
+<img src="figures/Analysis3.2.png" id="figure32"></img>
+<div id="figure32caption">Rank of word versus dollar signs for the top ten words whose normalized frequency is most positively and negatively correlated with dollar signs.
+</div>
+<div id="contentText10">
+<div id="marginBox">
+Want to see more significant words? <br><a class="boxLink" href=" https://github.com/trevormartin/yelpdatasetchallenge/blob/master/DataAnalysis/topwordsreviewstars.txt">Click here </a> for the top 50 words associated with <span style="font-weight: 500">rating</span>.<br><a class="boxLink" href="https://github.com/trevormartin/yelpdatasetchallenge/blob/master/DataAnalysis/topwordsdollarsigns.txt">Click here</a> for the top 50 words associated with <span style="font-weight: 500">dollar signs</span>. 
+</div>
+As expected &ldquo;wines&rdquo;, &ldquo;birthday&rdquo;, &ldquo;husbands&rdquo;,  were mentioned more in expensive restaurants, fitting the theme of a special occasion where you would be willing to pay more.  On the other side, &ldquo;deal&rdquo;,  &ldquo;lunch&rdquo;, and &ldquo;typical&rdquo;, were frequently used in cheaper restaurants.
+</div>
+
+
+<div id="q4_header">Conclusion</div>
+<div id="contentText11">
+Here we developed a simple approach to extract information about service from the reviews. &nbsp; This process can be performed with complex machine-learning methods - but we find that our simple approach yields interesting insights! &nbsp;
+From these analyses, we learned that service is a major component of restaurant reviews and its influence can easily be seen within the review text.  &nbsp; Also, we found that there are patterns of word-usage depending on the review rating and even the cost of the restaurant. &nbsp; We can see now that the simple Yelp star rating for a restaurant can reflect wildly different stories. &nbsp; More than just helping consumers, <span style="font-weight: 500">this type of analysis could be invaluable for restaurants. </span>  &nbsp; At GFBSs, <span style="color: red">cooks can stop tearing their hair out</span> at their Yelp rating and improvements can be made in targeted and effective ways (e.g., hiring more servers for the 7PM dinner rush). &nbsp; <br><br>We hope that you explore our analysis and maybe even find new insights through our interactive visualization. &nbsp; Hopefully this project gives you some food for thought along with some <span style="color: green">hidden food heavens</span>! 
+</div>
+
+</div>
+</body>
+
+

@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Crimson+Text:400,600,700' rel='stylesheet' type='text/css'>
+<title>goodFoodBadService.com authors</title>
+<link href="CSS/gfbs.css" rel="stylesheet" title="main.css" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+<div id="aaContent1">
+	<a href = "http://www.goodfoodbadservice.com" target="_parent"><img id ="aaGfbsLogo" src = "gfbsLogo.png"></img></a>
+</div>
+
+<div id="methodsContent2">
+	<div id="methodsHeader"> Methods </div>
+<br>
+<p> All code available at the following github repository: <a href="https://github.com/trevormartin/yelpdatasetchallenge"  target="_parent" style="display: inline">https://github.com/trevormartin/yelpdatasetchallenge</a>. 
+Data was downloaded from the Yelp Dataset Challenge Website (<a href="http://www.yelp.com/dataset_challenge" target="_parent" style="display: inline">http://www.yelp.com/dataset_challenge</a>) and formatted with Python. 
+Processed data was then loaded into the R statistical computing software for further analysis. 
+</p><br>
+<div id="methodsSubHeader">Removing the Effect of Review Length on Score</div>
+<p class="methodsText">
+After finding a correlation between review length and review score, we
+regressed out this effect with a simple linear regression of the form:
+absolute value of review score ~ intercept + review length. The residuals of
+this regression were then the new length adjusted scores. Because these scores
+are not on a strictly positive scale we then adjusted these scores (in a rank
+and difference preserving manner) by simply adding the minimum review score to
+all review scores, scaling all scores back into the (0, Inf) range. 
+</p><br><br>
+<div id="methodsSubHeader">Identifying Restaurants and Individuals with Significant Differences in Service Reviews</div>
+<p>
+To look at shifts in score for individual restaurants, the average review score 
+for a restaurant including only service mentioning reviews was compared to the 
+average review score for a restaurant including only non-service mentioning reviews 
+using a two-sided t-test for difference in means. Only restaurants that had at least 
+10 service mentioning and 10 non-service mentioning reviews are included in the analysis. 
+
+In the same way, shifts in score for specific individuals were calculated with
+the identical analysis and cutoff.
+</p><br><br>
+<div id="methodsSubHeader">Enrichment for Business Categories in Significant Service Review Difference </div>
+<p>
+First, the frequency of each business category in the list of businesses that
+had a significant shift in review score based on service word presence was
+tabulated. Then, an equal number of businesses as those that were discovered
+to have a significant shift were sampled from the list of tested businesses
+1000 times, each having a category frequency table calculated. To find the
+significance of the observed category frequencies in the non-permuted data,
+the observed data was compared to the permuted data by counting the number of
+times a permuted data set had a frequency of the category the same or larger
+than the observed data and then dividing by 1000. These permutation based
+p-values were then Bonferroni corrected and called significant if less than
+0.05. Categories with less than 3 observations were ignored in this analysis.
+</p><br><br>
+<div id="methodsSubHeader">Relationship between Percent of Reviews with Service Words and Review Score Differences</div>
+<p>
+Percent of reviews with service words for each individual was calculated by
+summing the number of reviews with service words and dividing by the total
+number of reviews for each individual. These percentages were then compared to
+the difference in review score (reviews without service words minus reviews
+with service words) using a pearson correlation, the significance of which was
+evaluated by using a t distribution with number of individuals minus 2 degrees
+of freedom. Figure was plotted to show the individual data points for each
+individual and the regression line with formula: review score difference ~
+percent of reviews with service words. 
+</p><br><br>
+<div id="methodsSubHeader">Service Hurts but Doesn't Help</div>
+<p>Two average review scores were calculated for each restaurant, the first 
+including only reviews with at least one service word and the second including only reviews that did not contain any word in the fixed service related word list (<a href="https://github.com/trevormartin/yelpdatasetchallenge/blob/master/DataPreparation/serviceWords.txt" style="display: inline">github link for list</a>). 
+These two sets of average reviews were then compared using a two-sided paired 
+t-test for difference in means. Only restaurants that had at least 10 service 
+mentioning and 10 non-service mentioning reviews are included in the analysis. 
+
+Similarly, for each individual the same two types of review scores were
+compared using the same type of paired t-test. And again, only individuals with at
+least 10 of each type of review were included. 
+</p><br><br>
+<div id="methodsSubHeader">Associating Words with Review Score and Prices</div>
+<p>
+The frequency of every word that appeared at least once in the review text
+data set was tabulated by review star (creating a frequency matrix of words as
+rows and review stars as columns) and then this data was thresholded to only include
+words that made at least 50 appearances in each review star category. Because
+there are large differences in overall frequency between review star
+categories, the data was normalized by scaling each column of the matrix
+(review star category) to have the same median as a new vector of word
+frequencies that was created by taking the geometric mean across review
+categories of each word. See more discussion of this technique that is widely
+used to normalize RNA-seq counts with the same scaling problem in genomics here: <a href="http://dx.doi.org/10.1186/s13059-014-0550-8" class="citeLink" target="_parent">Love et al. 2014</a>. 
+<p>
+Normalized word frequency was then associated with review score (and price) by
+correlating the normalized word frequency for each word across the review
+scores (or prices) with the number of stars (number of dollar signs). The
+significance of these correlations was then assessed by performing all
+possible permutations of the columns and recalculating the correlations for
+each word (120 permutations for the 5 review score columns; 24 permutations
+for the 4 dollar sign columns). The significance of each word's correlation
+score was then given by the number of permutations with the same or higher
+correlation as the observed data divided by the number of total permutations.
+P-values were then Bonferroni corrected and called significant at the 0.05
+level. 
+</p><br><br>
+<div id="methodsSubHeader">Correlation Between Price and Review Score Differences</div>
+<p>
+A correlation between the dollar signs of a restaurant and the score
+differential between reviews with and without service words was calculated by
+finding the correlation between the -log(p-value) of the individual
+businesses' service word and non service word review score difference
+calculated above and the number of dollar signs for that restaurant. The
+significance of this correlation was evaluated with a t distribution with
+number of businesses minus 2 degrees of freedom.
+</p><br><br>
+<div id="methodsSubHeader">Data Visualization</div>
+<p>
+In order to facilitate the visualization, the raw data was transformed using various (rank preserving) methods. P-values and q-values were transformed by taking the negative natural log of the values. Total review score was transformed by taking the logit of the values after subtracting 0.01. All values for circle size were scaled by multiplying by 30 except total sample size which is scaled by multiplication of 300. 
+</p><br><br>
+</div>
+
+</body>
