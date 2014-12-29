@@ -1,0 +1,25 @@
+library(dplyr)
+logit<-function(x) log(x/(1-x))
+
+allbus = read.table("data/fullbusinessdetails.txt")
+row.names(allbus) = allbus$business
+allbus$city = as.character(allbus$city)
+allbus$state = as.character(allbus$state)
+
+cleantable <- allbus %>%
+  select(
+    Name = fullname,
+    Hash = business,
+    City = city,
+    State = state,
+    OverallReviewScore = totalreviewscore,
+    OverallSampleSize = totalsamples,
+    ServiceReviewScore = scorewsw,
+    ServiceReviewSampleSize = sampwsw,
+    NonServiceReviewScore = scorewosw,
+    NonServiceReviewSampleSize = sampwosw,
+    Pvalue = pvalues,
+    Qvalue = qvalues,
+    Latitude = lat,
+    Longitude = long
+  )

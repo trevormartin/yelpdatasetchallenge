@@ -26,8 +26,9 @@ colnames(worddatain) = c("business","user","swscore")
 worddata = worddatain
 worddatares = lm(abs(worddatain[,3])~worddatain[,4])$residuals
 worddata[,3]=(worddatares+min(worddatares)*sign(min(worddatares)))*sign(worddatain[,3])
-busmetadata = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/bizAttributes.txt",header=FALSE,stringsAsFactors=FALSE,sep="\t")
-colnames(busmetadata) = c("business","allswscores","cats","dollars")
+busmetadata = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/bizAttributesNew.txt",header=FALSE,stringsAsFactors=FALSE,sep="\t")
+colnames(busmetadata) = c("business","allswscores","cats","dollars","state","city")
+busnamedata = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/code2name.txt",header=FALSE,stringsAsFactors=FALSE,sep="\t",quote="",comment.char="")
 
 ##### Part 2: Perform analysis
 
@@ -153,6 +154,10 @@ cor.test(-log(allbusttestres),pulldollar)
 
 ##### Part 3: Plot the data
 
+# Association between review score and review length
+pdf("./plots/reviewscorelengthassoc.pdf")
+ggplot(aes(x=length,y=score),data=data.frame(length=worddatain[,4],score=abs(worddatain[,3]))) + ylim(c(0,5)) + geom_point(alpha=.2) + theme_bw() + theme(axis.text = element_text(size=rel(1.5)),panel.border=element_blank()) + geom_smooth(method = "lm",formula=y~x,fullrange=TRUE,weight=rel(2),color=pastelred)
+dev.off()
 # Businesses with significant shifts in review scores
 pdf("./plots/revscoreswvnow.pdf")
 pastelred="#ff5148"
@@ -163,7 +168,18 @@ ggplot(aes(x=scorewsw,y=scorewosw),data=busallnonsig) + geom_point(alpha=.5) + s
 dev.off()
 # Also output to file
 busoutput = data.frame(busallsig,pvalues=allbusttestres[bussigfac==2])
-write.table(busoutput,file="./sigbusinessdetails.txt")
+matchbustometa = match(busoutput$business,busmetadata$business)
+bussideind = sign(busoutput$scorewosw-busoutput$scorewsw)
+busoutput2 = data.frame(busoutput,dir=bussideind,state=busmetadata$state[matchbustometa],city=busmetadata$city[matchbustometa])
+write.table(busoutput2,file="./sigbusinessdetails.txt")
+# And output business data file for interactive visualization
+businteract1 = merge(busall,busnamedata,by.x="business",by.y="V1")
+totsamps = with(businteract1,sampwsw+sampwosw)
+totrevscore = with(businteract1,(scorewsw*sampwsw+scorewosw*sampwosw)/(sampwsw+sampwosw))
+businteract2 = data.frame(businteract1,totalsamples=totsamps,totalreviewscore=totrevscore,pvalues=allbusttestres,qvalues=allbusttestqvals)
+businteract = businteract2[,c("business","V2","sampwsw","scorewsw","sampwosw","scorewosw","totalsamples","totalreviewscore","pvalues","qvalues","V5","V6","V3","V4")]
+colnames(businteract)[c(2,11:14)] = c("fullname","city","state","lat","long")
+write.table(businteract,file="./fullbusinessdetails.txt")
 # Users with significant shifts in review scores
 pdf("./plots/revscoreswvnowusers.pdf")
 usersigfac = (as.numeric(usersigtests)+1)
