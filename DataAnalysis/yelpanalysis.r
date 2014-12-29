@@ -14,21 +14,21 @@ require(combinat)
 options(mc.cores=15)
 options(cores=15)
 
-setwd("~/Documents/yelp/")
+setwd("~/path/to/yelp/")
 
 ########## Section 1: Service hurts but doesn't help
 
 ##### Part 1: Load in the data
 
 # business, user, swscore (negative if no service word)
-worddatain = read.table("/home/ryo/miscStuff/yelp_dataset_challenge_academic_dataset/finalSet/restReviewsSW3.txt",header=FALSE,stringsAsFactors=FALSE)
+worddatain = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/restReviewsSW3.txt",header=FALSE,stringsAsFactors=FALSE)
 colnames(worddatain) = c("business","user","swscore")
 worddata = worddatain
 worddatares = lm(abs(worddatain[,3])~worddatain[,4])$residuals
 worddata[,3]=(worddatares+min(worddatares)*sign(min(worddatares)))*sign(worddatain[,3])
-busmetadata = read.table("/home/ryo/miscStuff/yelp_dataset_challenge_academic_dataset/finalSet/bizAttributesNew.txt",header=FALSE,stringsAsFactors=FALSE,sep="\t")
+busmetadata = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/bizAttributesNew.txt",header=FALSE,stringsAsFactors=FALSE,sep="\t")
 colnames(busmetadata) = c("business","allswscores","cats","dollars","state","city")
-busnamedata = read.table("/home/ryo/miscStuff/yelp_dataset_challenge_academic_dataset/finalSet/code2name.txt",header=FALSE,stringsAsFactors=FALSE,sep="\t",quote="",comment.char="")
+busnamedata = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/code2name.txt",header=FALSE,stringsAsFactors=FALSE,sep="\t",quote="",comment.char="")
 
 ##### Part 2: Perform analysis
 
@@ -201,14 +201,14 @@ dev.off()
 ##### Part 1: Load in the data
 
 # word, number of times with 1 star, 2 stars, etc.
-ratingpresencedata = read.table("/home/ryo/miscStuff/yelp_dataset_challenge_academic_dataset/finalSet/wordRating.txt",header=FALSE,stringsAsFactors=FALSE)
+ratingpresencedata = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/wordRating.txt",header=FALSE,stringsAsFactors=FALSE)
 totalreviews = as.numeric(ratingpresencedata[1,-1])
 ratingpresencedatarn = ratingpresencedata[,1]
 ratingpresencedatac = ratingpresencedata[-1,-1]
 colnames(ratingpresencedatac) = c("one","two","three","four","five")
 rownames(ratingpresencedatac) = ratingpresencedatarn[-1]
 # word, number of times with 1 dollar, 2 dollar, etc.
-dollarpresencedata = read.table("/home/ryo/miscStuff/yelp_dataset_challenge_academic_dataset/finalSet/wordDollar.txt",header=FALSE,stringsAsFactors=FALSE)
+dollarpresencedata = read.table("/path/to/yelp_dataset_challenge_academic_dataset/finalSet/wordDollar.txt",header=FALSE,stringsAsFactors=FALSE)
 totalreviewsdollar = as.numeric(dollarpresencedata[1,-1])
 dollarpresencedatarn = dollarpresencedata[,1]
 dollarpresencedatac = dollarpresencedata[-1,-1]
