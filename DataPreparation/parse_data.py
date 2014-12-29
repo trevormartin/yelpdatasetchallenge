@@ -23,6 +23,9 @@ def main():
     create_word_rating_file()
     create_word_dollar_file(bizDict)
 
+
+
+
 #########################
 def biz_parse():
     ''' Parses yelp BUSINESS dataset - Extracting only restaurants. '''
@@ -210,6 +213,15 @@ def create_bizAttributes_file(bizDict):
         fileOUT.write(outLine)
     fileOUT.close()
 
+#########################
+def biz_print(bizDict):
+
+    fileOUT = open("code2name.txt", "w")
+    for i in bizDict:
+        data = bizDict[i]
+        outLine = i + "\t" + data[1].encode('ascii', 'ignore') +"\t" + str(data[5]) + "\t" + str(data[6]) +  "\t" + str(data[4].encode('ascii', 'ignore')) +  "\t" + str(data[3].encode('ascii', 'ignore')) + "\n"
+        fileOUT.write(outLine)
+    fileOUT.close()
 
 	
 #########################
