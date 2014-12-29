@@ -2,11 +2,15 @@ library(dplyr)
 
 allbus = read.table("data/fullbusinessdetails.txt")
 row.names(allbus) = allbus$business
+allbus$city = as.character(allbus$city)
+allbus$state = as.character(allbus$state)
 
 cleantable <- allbus %>%
   select(
     Name = fullname,
     Hash = business,
+    City = city,
+    State = state,
     OverallReviewScore = totalreviewscore,
     OverallSampleSize = totalsamples,
     ServiceReviewScore = scorewsw,

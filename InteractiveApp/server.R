@@ -23,7 +23,7 @@ shinyServer(function(input, output, session) {
 
   createAlert(session, inputId = "dataexp",
     title = "Some Tips for Exploring!",
-    message = "Show only p-values of a certain range using the inputs below, and click on the Action crosshair to be taken to the business on the interactive map!",
+    message = "Show only businesses in particular states/cities or with p-values of a certain range using the inputs below, click on the MapLink crosshair to be taken to the business on the interactive map, and click on any column's name to sort the table by that column!",
     type = "info",
     dismiss = TRUE,
     block = TRUE,
@@ -74,11 +74,24 @@ shinyServer(function(input, output, session) {
 
       colorData <- if (colorBy == "significant") {
         as.numeric(allbus$qvalues < (input$threshold/100))
+      } else if(colorBy == "pvalues" | colorBy == "qvalues") {
+	-log(allbus[[colorBy]])
       } else {
         allbus[[colorBy]]
       }
       colors <- brewer.pal(7, "OrRd")[cut(colorData, breaks=7, labels = FALSE)]
       colors <- colors[match(busdata$business, allbus$business)]
+
+      scaledData <- (allbus[[sizeBy]] / max(allbus[[sizeBy]]))
+      sizeData <- if(sizeBy == "constantsize") {
+	rep(30,nrow(allbus))
+      } else if(sizeBy == "totalsamples") {
+	scaledData * 300
+      } else if(sizeBy == "totalreviewscore") {
+	log((scaledData-.01)/(1-(scaledData-.01))) * 30
+      } else {
+	-log(scaledData) * 30
+      }
       
       # Clear existing circles before drawing
       map$clearShapes()
@@ -92,7 +105,7 @@ shinyServer(function(input, output, session) {
         try(
           map$addCircle(
             buschunk$lat, buschunk$long,
-            (buschunk[[sizeBy]] / max(allbus[[sizeBy]])) * 3000,
+            sizeData[from:to],
             buschunk$business,
             list(stroke=FALSE, fill=TRUE, fillOpacity=0.5),
             list(color = colors[from:to])
@@ -115,7 +128,9 @@ shinyServer(function(input, output, session) {
         format(round(selectedBus$pvalues,2),scientific=TRUE)
       ))), tags$br(),
       sprintf("Overall Review Score: %s", round(as.numeric(selectedBus$totalreviewscore),2)), tags$br(),
-      sprintf("Overall Sample Size: %s", as.numeric(selectedBus$totalsamples)), tags$br()
+      sprintf("Overall Sample Size: %s", as.numeric(selectedBus$totalsamples)), tags$br(),
+      sprintf("Service Review Score: %s", round(as.numeric(selectedBus$scorewsw),2)), tags$br(),
+      sprintf("Non-Service Review Score: %s", round(as.numeric(selectedBus$scorewosw),2)), tags$br()
     ))
     map$showPopup(lat, lng, content, business)
   }
@@ -136,13 +151,25 @@ shinyServer(function(input, output, session) {
   
   
   ## Data Explorer ###########################################
-  
+ 
+  observe({
+    cities <- if (is.null(input$states)) character(0) else {
+    filter(cleantable, State %in% input$states) %.%
+    `$`('City') %.%
+    unique() %.%
+    sort()
+    }
+    stillSelected <- isolate(input$cities[input$cities %in% cities])
+    updateSelectInput(session, "cities", choices = cities,
+    selected = stillSelected)
+  })
+
   observe({
     if (is.null(input$goto))
       return()
     isolate({
       map$clearPopups()
-      dist <- 0.5
+      dist <- 0.25
       zip <- input$goto$zip
       lat <- input$goto$lat
       lng <- input$goto$lng
@@ -156,9 +183,27 @@ shinyServer(function(input, output, session) {
     cleantable %>%
       filter(
         Pvalue >= input$minpval,
-        Pvalue <= input$maxpval
+        Pvalue <= input$maxpval,
+	is.null(input$states) | State %in% input$states,
+	is.null(input$cities) | City %in% input$cities
       ) %>%
-      mutate(Action = paste('<a class="go-map" href="" data-lat="', Latitude, '" data-long="', Longitude, '" data-zip="', Hash, '"><i class="fa fa-crosshairs"></i></a>', sep=""))
+      mutate(Action = paste('<a class="go-map" href="" data-lat="', Latitude, '" data-long="', Longitude, '" data-zip="', Hash, '"><i class="fa fa-crosshairs"></i></a>', sep="")) %>%
+      mutate(ReviewDiff = abs(NonServiceReviewScore - ServiceReviewScore)) %>%
+	  select(
+	    Name = Name,
+	    MapLink = Action,
+	    City = City,
+	    State = State,
+	    OverallReviewScore = OverallReviewScore,
+	    OverallSampleSize = OverallSampleSize,
+	    SRScore = ServiceReviewScore,
+	    SRSampleSize = ServiceReviewSampleSize,
+	    NSRScore = NonServiceReviewScore,
+	    NSRSampleSize = NonServiceReviewSampleSize,
+	    ReviewDiff = ReviewDiff,
+	    Pvalue = Pvalue,
+	    Qvalue = Qvalue
+	  )
   })
 
 })

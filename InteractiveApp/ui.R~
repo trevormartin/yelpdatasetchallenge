@@ -14,7 +14,8 @@ sizevars <- c(
   "Overall Review Score" = "totalreviewscore",
   "Overall Sample Size" = "totalsamples",
   "P-value" = "pvalues",
-  "Q-value" = "qvalues"
+  "Q-value" = "qvalues",
+  "Constant" = "constantsize"
 )
 
 
@@ -33,8 +34,9 @@ shinyUI(navbarPage("Good Food, Bad Service", id="nav",
         initialTileLayer = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
         initialTileLayerAttribution = HTML('Maps by <a href="http://www.mapbox.com/">Mapbox</a>'),
         options=list(
-          center = c(36.16694,-115.1733),
-          zoom = 11
+          #center = c(36.16694,-115.1733),
+          center = c(36.12,-115.1733),
+          zoom = 14
           #maxBounds = list(list(36.34432,-114.9536), list(35.98955,-115.393)) # Show Las Vegas only 
         )
       ),
@@ -49,9 +51,9 @@ shinyUI(navbarPage("Good Food, Bad Service", id="nav",
         selectInput("size", "Size", sizevars, selected = "totalsamples"),
 	conditionalPanel("input.color == 'significant' || input.size == 'significant'",
 	  # Only prompt for threshold when coloring or sizing by significance
-          numericInput("threshold", "FDR threshold (percent false positives)", 5)
+          numericInput("threshold", "FDR (q-value) threshold (percent false positives)", 5)
 	),
-        
+        p("P-values and Q-values (FDR) are for significance of service and non-service review score differences, lower values are more significant."),
         plotOutput("histpvals", height = 200),
 	bsAlert(inputId = "intermap")
       ),
@@ -65,6 +67,16 @@ shinyUI(navbarPage("Good Food, Bad Service", id="nav",
   tabPanel("Data Explorer",
     bsAlert(inputId = "dataexp"),
     fluidRow(
+      column(3,
+        selectInput("states", "States", c("All states"="", unique(allbus$state)), multiple=TRUE)
+      ),
+      column(3,
+	conditionalPanel("input.states",
+	selectInput("cities", "Cities", c("All cities"=""), multiple=TRUE)
+      )
+      )
+    ),
+    fluidRow(
       column(1,
         numericInput("minpval", "Min p-value", min=0, max=1, value=0)
       ),
@@ -72,6 +84,10 @@ shinyUI(navbarPage("Good Food, Bad Service", id="nav",
         numericInput("maxpval", "Max p-value", min=0, max=1, value=1)
       )
     ),
+    hr(),
+    p("SR: Service Review"),
+    p("NSR: Non-Service Review"),
+    p("ReviewDiff: Absolute value of Service Review minus Non-Service Review Scores"),
     hr(),
     dataTableOutput("bustable")
   ),
