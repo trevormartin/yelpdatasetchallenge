@@ -10,6 +10,7 @@ Folder Name  | Language | Description
 DataPreparation  | Python | Parse and format data.
 DataAnalysis  | R | Perform statistical analysis.
 InteractiveApp  | R | Create interactive web visualization.
+web  | HTML | Create project website. 
 
 Note that the actual data must be downloaded from Yelp directly and then placed in the appropriate directories before these scripts can be run. 
 
